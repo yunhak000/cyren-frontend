@@ -1,11 +1,22 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { auth, signInWithGoogle } from "../../firebase";
 
 export default function Login() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      user ? navigate("/") : navigate("/login");
+    });
+  }, []);
+
   return (
     <LoginWrap>
       <div>
         <img src="/images/monitoring_logo.png" alt="로고 이미지" className="login-logo" />
-        <img src="/images/google_login_button.png" alt="구글 로그인 버튼" className="google-login-button" />
+        <img src="/images/google_login_button.png" alt="구글 로그인 버튼" className="google-login-button" onClick={signInWithGoogle} />
       </div>
     </LoginWrap>
   );
