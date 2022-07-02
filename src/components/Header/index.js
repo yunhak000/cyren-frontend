@@ -1,10 +1,15 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export default function Header() {
   return (
     <HeaderWrap>
       <div className="container">
-        <img src="/images/logo.png" alt="" />
+        <h1>
+          <Link to="/">
+            <img src="/images/logo.png" alt="" />
+          </Link>
+        </h1>
         <button>로그아웃</button>
       </div>
     </HeaderWrap>
@@ -21,9 +26,13 @@ const HeaderWrap = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    img {
-      @media screen and (max-width: 1200px) {
-        width: 60px;
+    a {
+      display: inline-block;
+
+      img {
+        @media screen and (max-width: 1200px) {
+          width: 60px;
+        }
       }
     }
 

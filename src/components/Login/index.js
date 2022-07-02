@@ -5,7 +5,7 @@ export default function Login() {
     <LoginWrap>
       <div>
         <img src="/images/monitoring_logo.png" alt="로고 이미지" className="login-logo" />
-        <img src="/images/google-login-button.png" alt="구글 로그인 버튼" className="google-login-button" />
+        <img src="/images/google_login_button.png" alt="구글 로그인 버튼" className="google-login-button" />
       </div>
     </LoginWrap>
   );
