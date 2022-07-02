@@ -1,7 +1,18 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { auth } from "../../firebase";
+
 export default function Header() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      user ? navigate("/") : navigate("/login");
+    });
+  }, []);
+
   return (
     <HeaderWrap>
       <div className="container">
@@ -10,7 +21,13 @@ export default function Header() {
             <img src="/images/logo.png" alt="" />
           </Link>
         </h1>
-        <button>로그아웃</button>
+        <button
+          onClick={() => {
+            auth.signOut();
+          }}
+        >
+          로그아웃
+        </button>
       </div>
     </HeaderWrap>
   );
