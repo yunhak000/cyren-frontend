@@ -9,7 +9,7 @@ export default function Header() {
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      user ? navigate("/") : navigate("/login");
+      !user && navigate("/login");
     });
   }, []);
 
