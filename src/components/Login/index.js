@@ -8,7 +8,7 @@ export default function Login() {
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      user ? navigate("/") : navigate("/login");
+      user && navigate("/");
     });
   }, []);
 

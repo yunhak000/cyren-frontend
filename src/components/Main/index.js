@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import deviceType from "../../util/deviceCheck";
@@ -7,14 +8,14 @@ export default function Main() {
     <MainWrap>
       <img src="/images/not_monitoring_logo.png" alt="" />
       <div>
-        <p>
+        <Link to="/photo">
           <img src="/images/photo.png" alt="사진첩 아이콘" />
           <span>photo</span>
-        </p>
-        <p>
+        </Link>
+        <Link to="/map">
           <img src="/images/map.png" alt="내기기위치 아이콘" />
           <span>map</span>
-        </p>
+        </Link>
       </div>
       {deviceType() === "desktop" && <button>감시 시작</button>}
     </MainWrap>
@@ -44,7 +45,7 @@ const MainWrap = styled.div`
       padding-top: 50px;
     }
 
-    p {
+    a {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -75,7 +76,7 @@ const MainWrap = styled.div`
       }
     }
 
-    p:last-child {
+    a:last-child {
       margin-right: 0;
     }
   }
