@@ -1,4 +1,4 @@
-const deviceType = () => {
+const deviceCheck = () => {
   const ua = navigator.userAgent;
   if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
     return "tablet";
@@ -8,4 +8,4 @@ const deviceType = () => {
   return "desktop";
 };
 
-export default deviceType;
+export default deviceCheck;

@@ -3,14 +3,33 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { auth } from "../../firebase";
+import { socketStore, monitoringStore, userEmailStore } from "../../store";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { socket } = socketStore();
+  const { isMonitoring } = monitoringStore();
+  const { userEmail } = userEmailStore();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      !user && navigate("/login");
+      if (!user) {
+        socket && socket.disconnect();
+        socketStore.setState({ socket: null });
+
+        navigate("/login");
+      }
     });
+
+    if (socket) {
+      socket.on("request-monitoring-state", () => {
+        socket.emit("response-monitoring-state", isMonitoring, userEmail);
+      });
+
+      socket.on("setting-monitoring", (isMonitoring) => {
+        userEmailStore.setState({ isMonitoring });
+      });
+    }
   }, []);
 
   return (

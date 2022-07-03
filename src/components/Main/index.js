@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import deviceType from "../../util/deviceCheck";
+import deviceCheck from "../../utils/deviceCheck";
 
 export default function Main() {
   return (
@@ -17,7 +17,7 @@ export default function Main() {
           <span>map</span>
         </Link>
       </div>
-      {deviceType() === "desktop" && <button>감시 시작</button>}
+      {deviceCheck() === "desktop" && <button>감시 시작</button>}
     </MainWrap>
   );
 }
