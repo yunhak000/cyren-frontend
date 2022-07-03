@@ -1,5 +1,13 @@
 import create from "zustand";
 
-const useStore = create((set) => ({}));
+export const socketStore = create(() => ({
+  socket: null,
+}));
 
-export default useStore;
+export const monitoringStore = create(() => ({
+  isMonitoring: false,
+}));
+
+export const userEmailStore = create(() => ({
+  userEmail: null,
+}));

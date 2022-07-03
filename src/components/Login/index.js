@@ -1,7 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { auth, signInWithGoogle } from "../../firebase";
+
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
+
+import io from "socket.io-client";
+
+import deviceCheck from "../../utils/deviceCheck";
+import { socketStore, userEmailStore } from "../../store";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,6 +18,23 @@ export default function Login() {
       user && navigate("/");
     });
   }, []);
+
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const socket = io.connect(process.env.REACT_APP_SERVER_URL);
+
+        socket.emit("logged-in", result.user.email);
+
+        deviceCheck() !== "desktop" && socket.emit("mobile-logged-in", result.user.email);
+
+        userEmailStore.setState({ userEmail: result.user.email });
+        socketStore.setState({ socket });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <LoginWrap>
