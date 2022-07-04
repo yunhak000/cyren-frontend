@@ -27,13 +27,13 @@ export default function Header() {
       });
 
       socket.on("setting-monitoring", (isMonitoring) => {
-        userEmailStore.setState({ isMonitoring });
+        monitoringStore.setState({ isMonitoring });
       });
     }
-  }, []);
+  }, [isMonitoring]);
 
   return (
-    <HeaderWrap>
+    <HeaderWrap isMonitoring={isMonitoring}>
       <div className="container">
         <h1>
           <Link to="/">
@@ -55,7 +55,7 @@ export default function Header() {
 const HeaderWrap = styled.div`
   padding: 22px 0;
   z-index: 1;
-  background-color: #1a73e8;
+  background-color: ${(props) => (props.isMonitoring ? "#df2828" : "#1a73e8")};
 
   div {
     display: flex;
@@ -78,7 +78,7 @@ const HeaderWrap = styled.div`
       border-radius: 10px;
       padding: 8px 25px;
       background-color: #fff;
-      color: #1a73e8;
+      color: ${(props) => (props.isMonitoring ? "#df2828" : "#1a73e8")};
 
       @media screen and (max-width: 1200px) {
         font-size: 14px;

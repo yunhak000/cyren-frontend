@@ -1,12 +1,33 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import deviceCheck from "../../utils/deviceCheck";
 
+import { monitoringStore, socketStore, userEmailStore } from "../../store";
+
 export default function Main() {
+  const { isMonitoring } = monitoringStore();
+  const { socket } = socketStore();
+  const { userEmail } = userEmailStore();
+
+  const startMonitoring = () => {
+    monitoringStore.setState({ isMonitoring: true });
+  };
+
+  const stopMonitoring = () => {
+    monitoringStore.setState({ isMonitoring: false });
+  };
+
+  useEffect(() => {
+    if (deviceCheck() === "desktop") {
+      socket && socket.emit("response-monitoring-state", isMonitoring, userEmail);
+    }
+  }, [isMonitoring]);
+
   return (
-    <MainWrap>
-      <img src="/images/not_monitoring_logo.png" alt="" />
+    <MainWrap isMonitoring={isMonitoring}>
+      {isMonitoring ? <img src="/images/monitoring_logo.png" alt="감시중일때의 로고" /> : <img src="/images/not_monitoring_logo.png" alt="감시중이지 않을때의 로고" />}
       <div>
         <Link to="/photo">
           <img src="/images/photo.png" alt="사진첩 아이콘" />
@@ -17,7 +38,15 @@ export default function Main() {
           <span>map</span>
         </Link>
       </div>
-      {deviceCheck() === "desktop" && <button>감시 시작</button>}
+      {deviceCheck() === "desktop" ? (
+        isMonitoring ? (
+          <button className="stop-monitoring" onClick={stopMonitoring}>
+            감시 종료
+          </button>
+        ) : (
+          <button onClick={startMonitoring}>감시 시작</button>
+        )
+      ) : null}
     </MainWrap>
   );
 }
@@ -52,7 +81,7 @@ const MainWrap = styled.div`
       margin-right: 40px;
       padding: 40px 30px;
       cursor: pointer;
-      border: 4px solid #1a73e8;
+      border: ${(props) => (props.isMonitoring ? "4px solid #df2828" : "4px solid #1a73e8")};
       border-radius: 20px;
       background-color: #fff;
 
@@ -89,5 +118,9 @@ const MainWrap = styled.div`
     margin-top: 60px;
     color: #fff;
     background-color: #1a73e8;
+  }
+
+  button.stop-monitoring {
+    background-color: #df2828;
   }
 `;
