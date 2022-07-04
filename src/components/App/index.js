@@ -1,7 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import GlobalStyles from "./GlobalStyles";
 import { Reset } from "styled-reset";
+
+import { monitoringStore } from "../../store";
 
 import Login from "../Login";
 import Header from "../Header";
@@ -11,9 +13,11 @@ import Map from "../Map";
 import PageNotFound from "../404";
 
 function App() {
+  const { isMonitoring } = monitoringStore();
+
   return (
     <>
-      <GlobalStyles />
+      <GlobalStyles isMonitoring={isMonitoring} />
       <Reset />
       <Router>
         <Routes>

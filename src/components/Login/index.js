@@ -24,9 +24,7 @@ export default function Login() {
       .then((result) => {
         const socket = io.connect(process.env.REACT_APP_SERVER_URL);
 
-        socket.emit("logged-in", result.user.email);
-
-        deviceCheck() !== "desktop" && socket.emit("mobile-logged-in", result.user.email);
+        socket.emit("logged-in", result.user.email, deviceCheck());
 
         userEmailStore.setState({ userEmail: result.user.email });
         socketStore.setState({ socket });
