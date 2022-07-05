@@ -6,17 +6,14 @@ export default function S3Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
 
-  const REGION = "ap-northeast-2";
-  const S3_BUCKET = "siren-photo-bucket";
-
   AWS.config.update({
     accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
     secretAccessKey: process.env.REACT_APP_S3_SECRET_ACCESS_KEY,
   });
 
   const myBucket = new AWS.S3({
-    params: { Bucket: S3_BUCKET },
-    region: REGION,
+    params: { Bucket: process.env.REACT_APP_S3_BUCKET },
+    region: process.env.REACT_APP_S3_REGION,
   });
 
   const handleFileInput = (e) => {
@@ -38,7 +35,7 @@ export default function S3Upload() {
     const params = {
       ACL: "public-read",
       Body: file,
-      Bucket: S3_BUCKET,
+      Bucket: process.env.REACT_APP_S3_BUCKET,
       Key: "Siren/photo/" + file.name,
     };
 
@@ -58,13 +55,11 @@ export default function S3Upload() {
   };
 
   return (
-    <div className="App">
-      <div className="App-body">
-        <div>{showAlert ? <span>업로드 진행률 : {progress}%</span> : <span>파일을 선택해 주세요.</span>}</div>
-        <div>
-          <input type="file" onChange={handleFileInput} />
-        </div>
+    <>
+      <div>{showAlert ? <span>업로드 진행률 : {progress}%</span> : <span>파일을 선택해 주세요.</span>}</div>
+      <div>
+        <input type="file" onChange={handleFileInput} />
       </div>
-    </div>
+    </>
   );
 }
