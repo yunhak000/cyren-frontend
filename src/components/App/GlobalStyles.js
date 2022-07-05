@@ -3,7 +3,6 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
   body {
     font-size: 16px;
-    min-height: 100vh;
     background: ${(props) => (props.isMonitoring ? "#fff6f6" : "#eff5fd")};
   }
 
