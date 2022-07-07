@@ -4,19 +4,17 @@ import styled from "styled-components";
 
 import deviceCheck from "../../utils/deviceCheck";
 
-import { monitoringStore, socketStore, userEmailStore } from "../../store";
+import useStore from "../../store";
 
 export default function Main() {
-  const { isMonitoring } = monitoringStore();
-  const { socket } = socketStore();
-  const { userEmail } = userEmailStore();
+  const { socket, toggleMonitoring, isMonitoring, userEmail } = useStore();
 
   const startMonitoring = () => {
-    monitoringStore.setState({ isMonitoring: true });
+    toggleMonitoring();
   };
 
   const stopMonitoring = () => {
-    monitoringStore.setState({ isMonitoring: false });
+    toggleMonitoring();
   };
 
   useEffect(() => {

@@ -3,19 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { auth } from "../../firebase";
-import { socketStore, monitoringStore, userEmailStore } from "../../store";
+import useStore from "../../store";
+
+import deviceCheck from "../../utils/deviceCheck";
+
+import Video from "../Video";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { socket } = socketStore();
-  const { isMonitoring } = monitoringStore();
-  const { userEmail } = userEmailStore();
+  const { setToggleAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail } = useStore();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (!user) {
         socket && socket.disconnect();
-        socketStore.setState({ socket: null });
+        setSocket({ socket: null });
 
         navigate("/login");
       }
@@ -27,7 +29,15 @@ export default function Header() {
       });
 
       socket.on("setting-monitoring", (isMonitoring) => {
-        monitoringStore.setState({ isMonitoring });
+        setMonitoring(isMonitoring);
+      });
+
+      socket.on("response-alert-sounding", () => {
+        setToggleAlert(true);
+      });
+
+      socket.on("response-alert-off", () => {
+        setToggleAlert(false);
       });
     }
   }, [isMonitoring]);
@@ -40,9 +50,15 @@ export default function Header() {
             <img src="/images/logo.png" alt="" />
           </Link>
         </h1>
+        {deviceCheck() === "desktop" && isMonitoring && <Video />}
         <button
           onClick={() => {
             auth.signOut();
+
+            socket.off("request-monitoring-state");
+            socket.off("setting-monitoring");
+            socket.off("response-alert-sounding");
+            socket.off("response-alert-off");
           }}
         >
           로그아웃

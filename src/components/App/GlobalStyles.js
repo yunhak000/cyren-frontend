@@ -17,6 +17,7 @@ const GlobalStyles = createGlobalStyle`
 
   button {
     font-size: 16px;
+    color: #000;
     cursor: pointer;
   }
 

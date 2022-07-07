@@ -8,10 +8,11 @@ import { signInWithPopup } from "firebase/auth";
 import io from "socket.io-client";
 
 import deviceCheck from "../../utils/deviceCheck";
-import { socketStore, userEmailStore } from "../../store";
+import useStore from "../../store";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setSocket, setUserEmail } = useStore();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -26,8 +27,8 @@ export default function Login() {
 
         socket.emit("logged-in", result.user.email, deviceCheck());
 
-        userEmailStore.setState({ userEmail: result.user.email });
-        socketStore.setState({ socket });
+        setUserEmail(result.user.email);
+        setSocket(socket);
       })
       .catch((error) => {
         console.log(error);
