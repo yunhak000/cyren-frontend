@@ -54,11 +54,6 @@ export default function Header() {
         <button
           onClick={() => {
             auth.signOut();
-
-            socket.off("request-monitoring-state");
-            socket.off("setting-monitoring");
-            socket.off("response-alert-sounding");
-            socket.off("response-alert-off");
           }}
         >
           로그아웃
