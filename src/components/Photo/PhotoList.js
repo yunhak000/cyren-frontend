@@ -1,42 +1,96 @@
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const check = (e) => {
-  e.target.classList.toggle("on");
-};
+import useStore from "../../store";
+
+import { deleteFile } from "../../utils/s3Controller";
 
 export default function PhotoList() {
+  const { date, userEmail, photos, setPhotos, setPhotoUrl, setIsShowPhotoDetail, socket } = useStore();
+  let photoIds = useRef([]);
+
+  const showDetailPhoto = (url) => {
+    setPhotoUrl(url);
+    setIsShowPhotoDetail(true);
+  };
+
+  const callPhotoList = async () => {
+    if (userEmail) {
+      const data = await fetch("http://localhost:8000/photos/photoLists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail,
+          date,
+        }),
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      const photos = await data.json();
+
+      setPhotos(photos);
+    }
+  };
+
+  const check = (e) => {
+    const isPhotoIds = photoIds.current.filter((photoId) => photoId.Key === e.target.id);
+
+    if (isPhotoIds.length) {
+      e.target.classList.remove("on");
+      photoIds.current = photoIds.current.filter((photoId) => {
+        return photoId.Key !== e.target.id;
+      });
+    } else {
+      e.target.classList.add("on");
+      photoIds.current.push({ Key: e.target.id });
+    }
+  };
+
+  useEffect(() => {
+    photoIds.current = [];
+
+    callPhotoList();
+
+    socket &&
+      socket.on("call-photo-list", () => {
+        callPhotoList();
+      });
+  }, [date]);
+
   return (
     <>
       <PhotoListWrap>
         <div className="photo-button-wrap">
-          <button className="all-delete">전체삭제</button>
-          <button className="delete">삭제</button>
+          <button
+            className="delete"
+            onClick={() => {
+              if (window.confirm("정말 삭제 하시겠습니까?")) {
+                deleteFile(photoIds.current, socket, userEmail, callPhotoList);
+              }
+            }}
+          >
+            삭제
+          </button>
         </div>
         <div className="photo-list-items">
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
+          {photos &&
+            photos.map((photo) => {
+              return (
+                <div key={photo._id}>
+                  <span onClick={check} id={photo.fileName}></span>
+                  <img
+                    src={photo.s3Url}
+                    alt="사진"
+                    onClick={() => {
+                      showDetailPhoto(photo.s3Url);
+                    }}
+                  />
+                </div>
+              );
+            })}
         </div>
       </PhotoListWrap>
     </>
@@ -46,7 +100,7 @@ export default function PhotoList() {
 const PhotoListWrap = styled.div`
   .photo-button-wrap {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     margin: 20px 0;
     text-align: right;
 
@@ -66,10 +120,6 @@ const PhotoListWrap = styled.div`
         font-size: 14px;
       }
     }
-
-    .all-delete {
-      background-color: #606060;
-    }
   }
 
   .photo-list-items {
@@ -82,6 +132,10 @@ const PhotoListWrap = styled.div`
       grid-template-columns: repeat(3, 1fr);
       row-gap: 5px;
       column-gap: 5px;
+    }
+
+    div {
+      cursor: pointer;
     }
   }
 

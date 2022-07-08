@@ -1,9 +1,9 @@
-import { uploadFile } from "./s3Uploader";
+import { uploadFile } from "./s3Controller";
 import uuid from "react-uuid";
 
 let isPhotoCapture = true;
 
-export function motionDetector(keypoints, minConfidence, webcamCapture, userEmail) {
+export function motionDetector(keypoints, minConfidence, webcamCapture, userEmail, socket) {
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
@@ -17,7 +17,7 @@ export function motionDetector(keypoints, minConfidence, webcamCapture, userEmai
           const fileName = uuid() + ".jpg";
           const file = await urlToFile(url, fileName, "image/jpeg");
 
-          uploadFile(file, fileName, userEmail);
+          uploadFile(file, fileName, userEmail, socket);
         })();
 
         setTimeout(() => {

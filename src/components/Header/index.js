@@ -11,7 +11,7 @@ import Video from "../Video";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { setToggleAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail } = useStore();
+  const { setToggleAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail, date, setPhotos } = useStore();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -20,6 +20,8 @@ export default function Header() {
         setSocket({ socket: null });
 
         navigate("/login");
+      } else {
+        setUserEmail(user.email);
       }
     });
 
