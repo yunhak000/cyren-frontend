@@ -12,18 +12,22 @@ import Header from "../Header";
 import Main from "../Main";
 import Photo from "../Photo";
 import Map from "../Map";
+import Video from "../Video";
 import PCAlert from "../Modal/PCAlert";
 import MobileAlert from "../Modal/MobileAlert";
+import PhotoDetail from "../Modal/PhotoDetail";
 import PageNotFound from "../404";
 
 export default function App() {
-  const { isMonitoring, isAlert } = useStore();
+  const { isMonitoring, isAlert, isShowPhotoDetail } = useStore();
 
   return (
     <>
       <GlobalStyles isMonitoring={isMonitoring} />
       <Reset />
+      {deviceCheck() === "desktop" && isMonitoring && <Video />}
       {deviceCheck() === "desktop" && isAlert && <PCAlert />}
+      {isShowPhotoDetail && <PhotoDetail />}
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />

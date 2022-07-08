@@ -1,4 +1,5 @@
 import create from "zustand";
+import dayjs from "dayjs";
 
 const useStore = create((set) => ({
   socket: null,
@@ -10,6 +11,14 @@ const useStore = create((set) => ({
   setUserEmail: (userEmail) => set(() => ({ userEmail })),
   isAlert: false,
   setToggleAlert: (isAlert) => set(() => ({ isAlert })),
+  date: dayjs().format("YYYY-MM-DD"),
+  setDate: (date) => set(() => ({ date })),
+  photos: null,
+  setPhotos: (photos) => set(() => ({ photos })),
+  photoUrl: null,
+  setPhotoUrl: (photoUrl) => set(() => ({ photoUrl })),
+  isShowPhotoDetail: false,
+  setIsShowPhotoDetail: (isShowPhotoDetail) => set(() => ({ isShowPhotoDetail })),
 }));
 
 export default useStore;

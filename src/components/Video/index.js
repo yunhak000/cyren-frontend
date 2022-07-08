@@ -47,7 +47,7 @@ export default function Video() {
   };
 
   const motionDetectorResult = (pose) => {
-    motionDetector(pose["keypoints"], 0.9, webcamCapture, userEmail);
+    motionDetector(pose["keypoints"], 0.9, webcamCapture, userEmail, socket);
   };
 
   useEffect(() => {
