@@ -58,7 +58,7 @@ export default function PhotoList() {
       socket.on("call-photo-list", () => {
         callPhotoList();
       });
-  }, [date]);
+  }, [date, userEmail]);
 
   return (
     <>

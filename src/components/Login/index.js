@@ -4,15 +4,10 @@ import styled from "styled-components";
 
 import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
-
-import io from "socket.io-client";
-
-import deviceCheck from "../../utils/deviceCheck";
-import useStore from "../../store";
+import handleNetworkChange from "../../utils/handleNetworkChange";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setSocket, setUserEmail } = useStore();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -22,13 +17,8 @@ export default function Login() {
 
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const socket = io.connect(process.env.REACT_APP_SERVER_URL);
-
-        socket.emit("logged-in", result.user.email, deviceCheck());
-
-        setUserEmail(result.user.email);
-        setSocket(socket);
+      .then((response) => {
+        handleNetworkChange(navigator.onLine, response.user.email);
       })
       .catch((error) => {
         console.log(error);
