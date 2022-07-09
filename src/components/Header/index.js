@@ -1,26 +1,37 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import io from "socket.io-client";
 
 import { auth } from "../../firebase";
 import useStore from "../../store";
 
 import deviceCheck from "../../utils/deviceCheck";
+import handleNetworkChange from "../../utils/handleNetworkChange";
 
 import Video from "../Video";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { setToggleAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail, date, setPhotos } = useStore();
+  const { setToggleAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail } = useStore();
+
+  const handleChange = () => {
+    handleNetworkChange(navigator.onLine, userEmail);
+  };
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (!user) {
         socket && socket.disconnect();
-        setSocket({ socket: null });
+
+        setSocket(null);
+        setUserEmail(null);
 
         navigate("/login");
       } else {
+        const socket = io.connect(process.env.REACT_APP_SERVER_URL);
+
+        setSocket(socket);
         setUserEmail(user.email);
       }
     });
@@ -43,6 +54,24 @@ export default function Header() {
       });
     }
   }, [isMonitoring]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit("logged-in", userEmail, deviceCheck());
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (userEmail) {
+      window.addEventListener("online", handleChange);
+      window.addEventListener("offline", handleChange);
+    }
+
+    return () => {
+      window.removeEventListener("online", handleChange);
+      window.removeEventListener("offline", handleChange);
+    };
+  }, [userEmail]);
 
   return (
     <HeaderWrap isMonitoring={isMonitoring}>
