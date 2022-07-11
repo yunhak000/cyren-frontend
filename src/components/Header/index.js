@@ -11,12 +11,12 @@ import handleNetworkChange from "../../utils/handleNetworkChange";
 
 import Video from "../Video";
 
-export default function Header() {
+const Header = () => {
   const navigate = useNavigate();
-  const { setToggleAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail } = useStore();
+  const { setToggleAlert, isAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail } = useStore();
 
   const handleChange = () => {
-    handleNetworkChange(navigator.onLine, userEmail);
+    handleNetworkChange(navigator.onLine, userEmail, socket);
   };
 
   useEffect(() => {
@@ -35,14 +35,18 @@ export default function Header() {
         setUserEmail(user.email);
       }
     });
+  }, []);
 
+  useEffect(() => {
     if (socket) {
       socket.on("request-monitoring-state", () => {
-        socket.emit("response-monitoring-state", isMonitoring, userEmail);
+        socket.emit("response-monitoring-state", isMonitoring, userEmail, isAlert);
       });
 
-      socket.on("setting-monitoring", (isMonitoring) => {
+      socket.on("setting-monitoring", (isMonitoring, isAlert) => {
+        console.log("isAlert : ", isAlert);
         setMonitoring(isMonitoring);
+        setToggleAlert(isAlert);
       });
 
       socket.on("response-alert-sounding", () => {
@@ -53,7 +57,7 @@ export default function Header() {
         setToggleAlert(false);
       });
     }
-  }, [isMonitoring]);
+  }, [socket, isMonitoring, isAlert]);
 
   useEffect(() => {
     if (socket) {
@@ -65,6 +69,10 @@ export default function Header() {
     if (userEmail) {
       window.addEventListener("online", handleChange);
       window.addEventListener("offline", handleChange);
+
+      if (deviceCheck() === "desktop") {
+        socket.emit("response-monitoring-state", isMonitoring, userEmail);
+      }
     }
 
     return () => {
@@ -92,7 +100,7 @@ export default function Header() {
       </div>
     </HeaderWrap>
   );
-}
+};
 
 const HeaderWrap = styled.div`
   padding: 22px 0;
@@ -129,3 +137,5 @@ const HeaderWrap = styled.div`
     }
   }
 `;
+
+export default Header;

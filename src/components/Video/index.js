@@ -7,7 +7,7 @@ import { motionDetector } from "../../utils/motionDetector";
 
 import useStore from "../../store";
 
-export default function Video() {
+const Video = () => {
   const { setToggleAlert, socket, userEmail } = useStore();
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -67,7 +67,7 @@ export default function Video() {
       <canvas ref={canvasRef} />
     </VideoWrap>
   );
-}
+};
 
 const VideoWrap = styled.div`
   position: fixed;
@@ -88,3 +88,5 @@ const VideoWrap = styled.div`
     height: 100%;
   }
 `;
+
+export default Video;

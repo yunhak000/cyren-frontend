@@ -38,12 +38,12 @@ export const uploadFile = (file, fileName, userEmail, socket) => {
           date,
           dateTime,
         }),
-      });
+      }).catch((error) => console.log(error));
 
       socket.emit("change-photos", userEmail);
     })
-    .send((err) => {
-      if (err) console.log(err);
+    .send((error) => {
+      error && console.log(error);
     });
 };
 
@@ -56,9 +56,9 @@ export const deleteFile = (photoIds, socket, userEmail, callPhotoList) => {
     },
   };
 
-  myBucket.deleteObjects(params, async (err) => {
-    if (err) {
-      console.log(err, err.stack);
+  myBucket.deleteObjects(params, async (error) => {
+    if (error) {
+      console.log(error, error.stack);
     } else {
       await fetch("http://localhost:8000/photos/removePhotos", {
         method: "POST",
@@ -68,6 +68,9 @@ export const deleteFile = (photoIds, socket, userEmail, callPhotoList) => {
         body: JSON.stringify({
           photoIds,
         }),
+      }).catch((error) => {
+        alert("삭제에 실패했습니다.");
+        error && console.log(error);
       });
 
       alert("삭제되었습니다.");

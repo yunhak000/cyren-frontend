@@ -1,6 +1,6 @@
 const { kakao } = window;
 
-export default function KakaoMapScript(lat, lng) {
+const KakaoMapScript = (lat, lng) => {
   const container = document.getElementById("myMap");
   const options = {
     center: new kakao.maps.LatLng(lat, lng),
@@ -17,4 +17,6 @@ export default function KakaoMapScript(lat, lng) {
   });
 
   marker.setMap(map);
-}
+};
+
+export default KakaoMapScript;

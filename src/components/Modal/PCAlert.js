@@ -13,7 +13,7 @@ const boxFade = keyframes`
   }
 `;
 
-export default function PCAlert() {
+const PCAlert = () => {
   const content = (
     <>
       <audio src="/audio/siren_bgm.mp3" autoPlay loop />
@@ -22,7 +22,7 @@ export default function PCAlert() {
   );
 
   return ReactDOM.createPortal(content, document.getElementById("drawer"));
-}
+};
 
 const PCAlertWrap = styled.div`
   position: fixed;
@@ -34,3 +34,5 @@ const PCAlertWrap = styled.div`
   animation: ${boxFade} 1s linear infinite;
   background-color: rgba(255, 0, 0, 0.7);
 `;
+
+export default PCAlert;

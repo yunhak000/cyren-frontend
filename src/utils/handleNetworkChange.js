@@ -1,9 +1,9 @@
 import deviceCheck from "./deviceCheck";
 import dayjs from "dayjs";
 
-const handleNetworkChange = (online, userEmail) => {
-  if (deviceCheck() === "desktop") {
-    if (online) {
+const handleNetworkChange = (online, userEmail, socket) => {
+  if (online) {
+    if (deviceCheck() === "desktop") {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const dateTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
@@ -18,9 +18,11 @@ const handleNetworkChange = (online, userEmail) => {
             longitude: position.coords.longitude,
             dateTime,
           }),
-        });
+        }).catch((error) => error && console.log(error));
       });
     }
+  } else {
+    socket && socket.disconnect();
   }
 };
 

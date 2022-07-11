@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 import useStore from "../../store";
 
-export default function Date() {
+const Date = () => {
   const { date, setDate } = useStore();
 
   const nextDate = () => {
@@ -35,7 +35,7 @@ export default function Date() {
       </button>
     </DateWrap>
   );
-}
+};
 
 const DateWrap = styled.div`
   display: flex;
@@ -70,3 +70,5 @@ const DateWrap = styled.div`
     }
   }
 `;
+
+export default Date;

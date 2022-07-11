@@ -13,7 +13,7 @@ const useStore = create((set) => ({
   setToggleAlert: (isAlert) => set(() => ({ isAlert })),
   date: dayjs().format("YYYY-MM-DD"),
   setDate: (date) => set(() => ({ date })),
-  photos: null,
+  photos: [],
   setPhotos: (photos) => set(() => ({ photos })),
   photoUrl: null,
   setPhotoUrl: (photoUrl) => set(() => ({ photoUrl })),

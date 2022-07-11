@@ -6,8 +6,11 @@ import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import handleNetworkChange from "../../utils/handleNetworkChange";
 
-export default function Login() {
+import useStore from "../../store";
+
+const Login = () => {
   const navigate = useNavigate();
+  const { socket } = useStore();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -18,9 +21,10 @@ export default function Login() {
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((response) => {
-        handleNetworkChange(navigator.onLine, response.user.email);
+        handleNetworkChange(navigator.onLine, response.user.email, socket);
       })
       .catch((error) => {
+        alert("로그인이 실패하였습니다. 다시 로그인 해주세요.");
         console.log(error);
       });
   };
@@ -33,7 +37,7 @@ export default function Login() {
       </div>
     </LoginWrap>
   );
-}
+};
 
 const LoginWrap = styled.div`
   position: relative;
@@ -69,3 +73,5 @@ const LoginWrap = styled.div`
     }
   }
 `;
+
+export default Login;
