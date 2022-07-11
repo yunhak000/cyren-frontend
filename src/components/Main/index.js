@@ -6,7 +6,7 @@ import deviceCheck from "../../utils/deviceCheck";
 
 import useStore from "../../store";
 
-export default function Main() {
+const Main = () => {
   const { socket, toggleMonitoring, isMonitoring, userEmail } = useStore();
 
   const startMonitoring = () => {
@@ -47,7 +47,7 @@ export default function Main() {
       ) : null}
     </MainWrap>
   );
-}
+};
 
 const MainWrap = styled.div`
   position: absolute;
@@ -122,3 +122,5 @@ const MainWrap = styled.div`
     background-color: #df2828;
   }
 `;
+
+export default Main;

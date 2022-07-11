@@ -18,7 +18,7 @@ import MobileAlert from "../Modal/MobileAlert";
 import PhotoDetail from "../Modal/PhotoDetail";
 import PageNotFound from "../404";
 
-export default function App() {
+const App = () => {
   const { isMonitoring, isAlert, isShowPhotoDetail } = useStore();
 
   return (
@@ -40,4 +40,6 @@ export default function App() {
       {deviceCheck() !== "desktop" && isAlert && <MobileAlert />}
     </>
   );
-}
+};
+
+export default App;

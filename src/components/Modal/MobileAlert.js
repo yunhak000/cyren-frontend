@@ -2,10 +2,8 @@ import styled from "styled-components";
 
 import useStore from "../../store";
 
-export default function MobileAlert() {
+const MobileAlert = () => {
   const { setToggleAlert, socket, userEmail } = useStore();
-
-  console.log("mobileAlert");
 
   return (
     <MobileAlertWrap>
@@ -20,7 +18,7 @@ export default function MobileAlert() {
       </button>
     </MobileAlertWrap>
   );
-}
+};
 
 const MobileAlertWrap = styled.div`
   display: flex;
@@ -50,3 +48,5 @@ const MobileAlertWrap = styled.div`
     font-weight: bold;
   }
 `;
+
+export default MobileAlert;

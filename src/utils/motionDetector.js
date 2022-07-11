@@ -3,7 +3,7 @@ import uuid from "react-uuid";
 
 let isPhotoCapture = true;
 
-export function motionDetector(keypoints, minConfidence, webcamCapture, userEmail, socket) {
+export const motionDetector = (keypoints, minConfidence, webcamCapture, userEmail, socket) => {
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
@@ -28,7 +28,7 @@ export function motionDetector(keypoints, minConfidence, webcamCapture, userEmai
       continue;
     }
   }
-}
+};
 
 const urlToFile = async (url, filename, mimeType) => {
   const res = await fetch(url);

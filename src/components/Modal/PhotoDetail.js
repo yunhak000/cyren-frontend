@@ -1,24 +1,39 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 
 import useStore from "../../store";
 
-export default function PhotoDetail() {
+const PhotoDetail = () => {
   const { photoUrl, setIsShowPhotoDetail } = useStore();
-  const closePhotoDetail = () => {
-    setIsShowPhotoDetail(false);
+
+  const closePhotoDetail = (e) => {
+    e.keyCode === 27 && setIsShowPhotoDetail(false);
   };
+
+  useEffect(() => {
+    document.addEventListener("keyup", closePhotoDetail);
+
+    return () => {
+      document.removeEventListener("keyup", closePhotoDetail);
+    };
+  }, []);
 
   return (
     <PhotoDetailWrap>
       <div>
         <img src={photoUrl} alt="상세사진" />
-        <span to="/photo" onClick={closePhotoDetail}>
+        <span
+          to="/photo"
+          onClick={() => {
+            setIsShowPhotoDetail(false);
+          }}
+        >
           X
         </span>
       </div>
     </PhotoDetailWrap>
   );
-}
+};
 
 const PhotoDetailWrap = styled.div`
   position: fixed;
@@ -60,3 +75,5 @@ const PhotoDetailWrap = styled.div`
     }
   }
 `;
+
+export default PhotoDetail;

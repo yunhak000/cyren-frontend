@@ -5,7 +5,7 @@ import useStore from "../../store";
 
 import { deleteFile } from "../../utils/s3Controller";
 
-export default function PhotoList() {
+const PhotoList = () => {
   const { date, userEmail, photos, setPhotos, setPhotoUrl, setIsShowPhotoDetail, socket } = useStore();
   let photoIds = useRef([]);
 
@@ -25,9 +25,7 @@ export default function PhotoList() {
           userEmail,
           date,
         }),
-      }).catch((err) => {
-        console.log(err);
-      });
+      }).catch((error) => error && console.log(error));
 
       const photos = await data.json();
 
@@ -35,7 +33,19 @@ export default function PhotoList() {
     }
   };
 
-  const check = (e) => {
+  const photoAllDelete = () => {
+    const photoAllList = [];
+
+    photos.map((photo) => {
+      photoAllList.push({ Key: photo.fileName });
+    });
+
+    if (window.confirm("정말 삭제 하시겠습니까?")) {
+      deleteFile(photoAllList, socket, userEmail, callPhotoList);
+    }
+  };
+
+  const photoCheck = (e) => {
     const isPhotoIds = photoIds.current.filter((photoId) => photoId.Key === e.target.id);
 
     if (isPhotoIds.length) {
@@ -63,24 +73,29 @@ export default function PhotoList() {
   return (
     <>
       <PhotoListWrap>
-        <div className="photo-button-wrap">
-          <button
-            className="delete"
-            onClick={() => {
-              if (window.confirm("정말 삭제 하시겠습니까?")) {
-                deleteFile(photoIds.current, socket, userEmail, callPhotoList);
-              }
-            }}
-          >
-            삭제
-          </button>
-        </div>
+        {photos.length ? (
+          <div className="photo-button-wrap">
+            <button className="photo-all-delete" onClick={photoAllDelete}>
+              전체삭제
+            </button>
+            <button
+              className="delete"
+              onClick={() => {
+                if (window.confirm("정말 삭제 하시겠습니까?")) {
+                  deleteFile(photoIds.current, socket, userEmail, callPhotoList);
+                }
+              }}
+            >
+              삭제
+            </button>
+          </div>
+        ) : null}
         <div className="photo-list-items">
           {photos &&
             photos.map((photo) => {
               return (
                 <div key={photo._id}>
-                  <span onClick={check} id={photo.fileName}></span>
+                  <span onClick={photoCheck} id={photo.fileName}></span>
                   <img
                     src={photo.s3Url}
                     alt="사진"
@@ -95,12 +110,12 @@ export default function PhotoList() {
       </PhotoListWrap>
     </>
   );
-}
+};
 
 const PhotoListWrap = styled.div`
   .photo-button-wrap {
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
     margin: 20px 0;
     text-align: right;
 
@@ -119,6 +134,10 @@ const PhotoListWrap = styled.div`
         padding: 8px 15px;
         font-size: 14px;
       }
+    }
+
+    .photo-all-delete {
+      background-color: #444;
     }
   }
 
@@ -177,3 +196,5 @@ const PhotoListWrap = styled.div`
     }
   }
 `;
+
+export default PhotoList;

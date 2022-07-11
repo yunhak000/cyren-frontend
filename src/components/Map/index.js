@@ -3,7 +3,7 @@ import styled from "styled-components";
 import KakaoMapScript from "../../utils/kakaoMapScript";
 import useStore from "../../store";
 
-export default function Map() {
+const Map = () => {
   const [location, setLocation] = useState([]);
   const { userEmail } = useStore();
 
@@ -16,7 +16,7 @@ export default function Map() {
       body: JSON.stringify({
         userEmail,
       }),
-    });
+    }).catch((error) => error && console.log(error));
 
     const lastLocation = await res.json();
 
@@ -36,7 +36,7 @@ export default function Map() {
       <div id="myMap"></div>
     </MapWrap>
   );
-}
+};
 
 const MapWrap = styled.div`
   padding: 30px 0;
@@ -52,3 +52,5 @@ const MapWrap = styled.div`
     }
   }
 `;
+
+export default Map;
