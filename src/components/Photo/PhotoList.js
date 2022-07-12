@@ -1,47 +1,116 @@
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const check = (e) => {
-  e.target.classList.toggle("on");
-};
+import useStore from "../../store";
 
-export default function PhotoList() {
+import { deleteFile } from "../../utils/s3Controller";
+
+const PhotoList = () => {
+  const { date, userEmail, photos, setPhotos, setPhotoUrl, setIsShowPhotoDetail, socket } = useStore();
+  let photoIds = useRef([]);
+
+  const showDetailPhoto = (url) => {
+    setPhotoUrl(url);
+    setIsShowPhotoDetail(true);
+  };
+
+  const callPhotoList = async () => {
+    if (userEmail) {
+      const data = await fetch(`${process.env.REACT_APP_SERVER_URL}/photos/photoLists`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail,
+          date,
+        }),
+      }).catch((error) => error && console.log(error));
+
+      const photos = await data.json();
+
+      setPhotos(photos);
+    }
+  };
+
+  const photoAllDelete = () => {
+    const photoAllList = [];
+
+    photos.map((photo) => {
+      photoAllList.push({ Key: photo.fileName });
+    });
+
+    if (window.confirm("정말 삭제 하시겠습니까?")) {
+      deleteFile(photoAllList, socket, userEmail, callPhotoList);
+    }
+  };
+
+  const photoCheck = (e) => {
+    const isPhotoIds = photoIds.current.filter((photoId) => photoId.Key === e.target.id);
+
+    if (isPhotoIds.length) {
+      e.target.classList.remove("on");
+      photoIds.current = photoIds.current.filter((photoId) => {
+        return photoId.Key !== e.target.id;
+      });
+    } else {
+      e.target.classList.add("on");
+      photoIds.current.push({ Key: e.target.id });
+    }
+  };
+
+  useEffect(() => {
+    photoIds.current = [];
+
+    callPhotoList();
+
+    socket &&
+      socket.on("call-photo-list", () => {
+        callPhotoList();
+      });
+  }, [date, userEmail]);
+
   return (
     <>
       <PhotoListWrap>
-        <div className="photo-button-wrap">
-          <button className="all-delete">전체삭제</button>
-          <button className="delete">삭제</button>
-        </div>
+        {photos.length ? (
+          <div className="photo-button-wrap">
+            <button className="photo-all-delete" onClick={photoAllDelete}>
+              전체삭제
+            </button>
+            <button
+              className="delete"
+              onClick={() => {
+                if (window.confirm("정말 삭제 하시겠습니까?")) {
+                  deleteFile(photoIds.current, socket, userEmail, callPhotoList);
+                }
+              }}
+            >
+              삭제
+            </button>
+          </div>
+        ) : null}
         <div className="photo-list-items">
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
-          <div>
-            <span onClick={check}></span>
-            <img src="/images/photo.jpg" alt="사진" />
-          </div>
+          {photos &&
+            photos.map((photo) => {
+              return (
+                <div key={photo._id}>
+                  <span onClick={photoCheck} id={photo.fileName}></span>
+                  <img
+                    src={photo.s3Url}
+                    alt="사진"
+                    onClick={() => {
+                      showDetailPhoto(photo.s3Url);
+                    }}
+                  />
+                </div>
+              );
+            })}
         </div>
       </PhotoListWrap>
     </>
   );
-}
+};
 
 const PhotoListWrap = styled.div`
   .photo-button-wrap {
@@ -67,8 +136,8 @@ const PhotoListWrap = styled.div`
       }
     }
 
-    .all-delete {
-      background-color: #606060;
+    .photo-all-delete {
+      background-color: #444;
     }
   }
 
@@ -82,6 +151,10 @@ const PhotoListWrap = styled.div`
       grid-template-columns: repeat(3, 1fr);
       row-gap: 5px;
       column-gap: 5px;
+    }
+
+    div {
+      cursor: pointer;
     }
   }
 
@@ -123,3 +196,5 @@ const PhotoListWrap = styled.div`
     }
   }
 `;
+
+export default PhotoList;

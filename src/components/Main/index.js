@@ -1,25 +1,53 @@
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import deviceType from "../../util/deviceCheck";
+import deviceCheck from "../../utils/deviceCheck";
 
-export default function Main() {
+import useStore from "../../store";
+
+const Main = () => {
+  const { socket, toggleMonitoring, isMonitoring, userEmail } = useStore();
+
+  const startMonitoring = () => {
+    toggleMonitoring();
+  };
+
+  const stopMonitoring = () => {
+    toggleMonitoring();
+  };
+
+  useEffect(() => {
+    if (deviceCheck() === "desktop") {
+      socket && socket.emit("response-monitoring-state", isMonitoring, userEmail);
+    }
+  }, [isMonitoring]);
+
   return (
-    <MainWrap>
-      <img src="/images/not_monitoring_logo.png" alt="" />
+    <MainWrap isMonitoring={isMonitoring}>
+      {isMonitoring ? <img src="/images/monitoring_logo.png" alt="감시중일때의 로고" /> : <img src="/images/not_monitoring_logo.png" alt="감시중이지 않을때의 로고" />}
       <div>
-        <p>
+        <Link to="/photo">
           <img src="/images/photo.png" alt="사진첩 아이콘" />
           <span>photo</span>
-        </p>
-        <p>
+        </Link>
+        <Link to="/map">
           <img src="/images/map.png" alt="내기기위치 아이콘" />
           <span>map</span>
-        </p>
+        </Link>
       </div>
-      {deviceType() === "desktop" && <button>감시 시작</button>}
+      {deviceCheck() === "desktop" ? (
+        isMonitoring ? (
+          <button className="stop-monitoring" onClick={stopMonitoring}>
+            감시 종료
+          </button>
+        ) : (
+          <button onClick={startMonitoring}>감시 시작</button>
+        )
+      ) : null}
     </MainWrap>
   );
-}
+};
 
 const MainWrap = styled.div`
   position: absolute;
@@ -44,14 +72,14 @@ const MainWrap = styled.div`
       padding-top: 50px;
     }
 
-    p {
+    a {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin-right: 40px;
       padding: 40px 30px;
       cursor: pointer;
-      border: 4px solid #1a73e8;
+      border: ${(props) => (props.isMonitoring ? "4px solid #df2828" : "4px solid #1a73e8")};
       border-radius: 20px;
       background-color: #fff;
 
@@ -75,7 +103,7 @@ const MainWrap = styled.div`
       }
     }
 
-    p:last-child {
+    a:last-child {
       margin-right: 0;
     }
   }
@@ -89,4 +117,10 @@ const MainWrap = styled.div`
     color: #fff;
     background-color: #1a73e8;
   }
+
+  button.stop-monitoring {
+    background-color: #df2828;
+  }
 `;
+
+export default Main;

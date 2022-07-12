@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Date from "./Date";
 import PhotoList from "./PhotoList";
 
-export default function Photo() {
+const Photo = () => {
   return (
     <PhotoWrap>
       <div className="container">
@@ -12,8 +12,10 @@ export default function Photo() {
       </div>
     </PhotoWrap>
   );
-}
+};
 
 const PhotoWrap = styled.div`
   padding: 30px 0;
 `;
+
+export default Photo;

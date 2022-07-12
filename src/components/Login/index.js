@@ -1,15 +1,41 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Login() {
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
+import handleNetworkChange from "../../utils/handleNetworkChange";
+
+import useStore from "../../store";
+
+const Login = () => {
+  const navigate = useNavigate();
+  const { socket } = useStore();
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      user && navigate("/");
+    });
+  }, []);
+
+  const signInWithGoogle = async () => {
+    const res = await signInWithPopup(auth, provider).catch((error) => {
+      alert("로그인이 실패하였습니다. 다시 로그인 해주세요.");
+      console.log(error);
+    });
+
+    handleNetworkChange(navigator.onLine, res.user.email, socket);
+  };
+
   return (
     <LoginWrap>
       <div>
         <img src="/images/monitoring_logo.png" alt="로고 이미지" className="login-logo" />
-        <img src="/images/google-login-button.png" alt="구글 로그인 버튼" className="google-login-button" />
+        <img src="/images/google_login_button.png" alt="구글 로그인 버튼" className="google-login-button" onClick={signInWithGoogle} />
       </div>
     </LoginWrap>
   );
-}
+};
 
 const LoginWrap = styled.div`
   position: relative;
@@ -45,3 +71,5 @@ const LoginWrap = styled.div`
     }
   }
 `;
+
+export default Login;

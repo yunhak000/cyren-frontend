@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
   body {
     font-size: 16px;
-    background: #EFF5FD;
+    background: ${(props) => (props.isMonitoring ? "#fff6f6" : "#eff5fd")};
   }
 
   .container {
@@ -17,6 +17,7 @@ const GlobalStyles = createGlobalStyle`
 
   button {
     font-size: 16px;
+    color: #000;
     cursor: pointer;
   }
 
