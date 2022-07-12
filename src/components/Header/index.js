@@ -44,7 +44,6 @@ const Header = () => {
       });
 
       socket.on("setting-monitoring", (isMonitoring, isAlert) => {
-        console.log("isAlert : ", isAlert);
         setMonitoring(isMonitoring);
         setToggleAlert(isAlert);
       });

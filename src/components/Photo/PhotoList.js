@@ -16,7 +16,7 @@ const PhotoList = () => {
 
   const callPhotoList = async () => {
     if (userEmail) {
-      const data = await fetch("http://localhost:8000/photos/photoLists", {
+      const data = await fetch(`${process.env.REACT_APP_SERVER_URL}/photos/photoLists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -18,15 +18,13 @@ const Login = () => {
     });
   }, []);
 
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((response) => {
-        handleNetworkChange(navigator.onLine, response.user.email, socket);
-      })
-      .catch((error) => {
-        alert("로그인이 실패하였습니다. 다시 로그인 해주세요.");
-        console.log(error);
-      });
+  const signInWithGoogle = async () => {
+    const res = await signInWithPopup(auth, provider).catch((error) => {
+      alert("로그인이 실패하였습니다. 다시 로그인 해주세요.");
+      console.log(error);
+    });
+
+    handleNetworkChange(navigator.onLine, res.user.email, socket);
   };
 
   return (

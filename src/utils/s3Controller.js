@@ -26,7 +26,7 @@ export const uploadFile = (file, fileName, userEmail, socket) => {
       const dateTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
       const s3Url = "https://siren-photo-bucket.s3.ap-northeast-2.amazonaws.com/" + fileName;
 
-      await fetch("http://localhost:8000/photos/newPhotos", {
+      await fetch(`${process.env.REACT_APP_SERVER_URL}/photos/newPhotos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export const deleteFile = (photoIds, socket, userEmail, callPhotoList) => {
     if (error) {
       console.log(error, error.stack);
     } else {
-      await fetch("http://localhost:8000/photos/removePhotos", {
+      await fetch(`${process.env.REACT_APP_SERVER_URL}/photos/removePhotos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
