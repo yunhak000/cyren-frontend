@@ -8,7 +8,7 @@ const Map = () => {
   const { userEmail } = useStore();
 
   const getLocation = async () => {
-    const res = await fetch("http://localhost:8000/locations/lastLocations", {
+    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/locations/lastLocations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

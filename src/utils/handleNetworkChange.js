@@ -7,7 +7,7 @@ const handleNetworkChange = (online, userEmail, socket) => {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const dateTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-        await fetch("http://localhost:8000/locations/nowLocations", {
+        await fetch(`${process.env.REACT_APP_SERVER_URL}/locations/nowLocations`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

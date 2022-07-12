@@ -22,7 +22,7 @@ export const motionDetector = (keypoints, minConfidence, webcamCapture, userEmai
 
         setTimeout(() => {
           isPhotoCapture = true;
-        }, 1000);
+        }, 2000);
       }
 
       continue;
