@@ -14,7 +14,7 @@ const PhotoList = () => {
     setIsShowPhotoDetail(true);
   };
 
-  const callPhotoList = async () => {
+  const callPhotoList = async (returnDate) => {
     if (userEmail) {
       const data = await fetch(`${process.env.REACT_APP_SERVER_URL}/photos/photoLists`, {
         method: "POST",
@@ -23,7 +23,7 @@ const PhotoList = () => {
         },
         body: JSON.stringify({
           userEmail,
-          date,
+          date: returnDate ? returnDate : date,
         }),
       }).catch((error) => error && console.log(error));
 
@@ -65,8 +65,8 @@ const PhotoList = () => {
     callPhotoList();
 
     socket &&
-      socket.on("call-photo-list", () => {
-        callPhotoList();
+      socket.on("call-photo-list", (date) => {
+        callPhotoList(date);
       });
   }, [date, userEmail]);
 

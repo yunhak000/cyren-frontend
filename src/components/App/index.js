@@ -14,7 +14,6 @@ import Photo from "../Photo";
 import Map from "../Map";
 import Video from "../Video";
 import PCAlert from "../Modal/PCAlert";
-import MobileAlert from "../Modal/MobileAlert";
 import PhotoDetail from "../Modal/PhotoDetail";
 import PageNotFound from "../404";
 
@@ -37,7 +36,6 @@ const App = () => {
           <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </Router>
-      {deviceCheck() !== "desktop" && isAlert && <MobileAlert />}
     </>
   );
 };
