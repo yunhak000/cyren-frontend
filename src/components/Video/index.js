@@ -8,7 +8,7 @@ import { motionDetector } from "../../utils/motionDetector";
 import useStore from "../../store";
 
 const Video = () => {
-  const { setToggleAlert, socket, userEmail } = useStore();
+  const { setToggleAlert, socket, userEmail, token } = useStore();
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   let timer = useRef();
@@ -24,7 +24,7 @@ const Video = () => {
         if (!isShowPCAlert.current) {
           setToggleAlert(true);
 
-          socket.emit("request-alert-sounding", userEmail);
+          socket.emit("request-alert-sounding", userEmail, token);
 
           isShowPCAlert.current = true;
         }

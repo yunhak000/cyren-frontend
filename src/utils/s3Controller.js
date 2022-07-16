@@ -40,7 +40,7 @@ export const uploadFile = (file, fileName, userEmail, socket) => {
         }),
       }).catch((error) => console.log(error));
 
-      socket.emit("change-photos", userEmail);
+      socket.emit("change-photos", userEmail, date);
     })
     .send((error) => {
       error && console.log(error);

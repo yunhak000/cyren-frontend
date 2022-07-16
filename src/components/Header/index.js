@@ -1,25 +1,29 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import styled from "styled-components";
 import io from "socket.io-client";
 
-import { auth } from "../../firebase";
+import { auth, getTokenValue } from "../../firebase";
 import useStore from "../../store";
 
 import deviceCheck from "../../utils/deviceCheck";
 import handleNetworkChange from "../../utils/handleNetworkChange";
 
 import Video from "../Video";
+import MobileAlert from "../Modal/MobileAlert";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { setToggleAlert, isAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail } = useStore();
+  const { setToggleAlert, isAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail, setToken } = useStore();
 
   const handleChange = () => {
     handleNetworkChange(navigator.onLine, userEmail, socket);
   };
 
   useEffect(() => {
+    getTokenValue(setToken);
+
     auth.onAuthStateChanged((user) => {
       if (!user) {
         socket && socket.disconnect();
@@ -81,23 +85,26 @@ const Header = () => {
   }, [userEmail]);
 
   return (
-    <HeaderWrap isMonitoring={isMonitoring}>
-      <div className="container">
-        <h1>
-          <Link to="/">
-            <img src="/images/logo.png" alt="" />
-          </Link>
-        </h1>
-        {deviceCheck() === "desktop" && isMonitoring && <Video />}
-        <button
-          onClick={() => {
-            auth.signOut();
-          }}
-        >
-          로그아웃
-        </button>
-      </div>
-    </HeaderWrap>
+    <>
+      {deviceCheck() !== "desktop" && isAlert && <MobileAlert />}
+      <HeaderWrap isMonitoring={isMonitoring}>
+        <div className="container">
+          <h1>
+            <Link to="/">
+              <img src="/images/logo.png" alt="" />
+            </Link>
+          </h1>
+          {deviceCheck() === "desktop" && isMonitoring && <Video />}
+          <button
+            onClick={() => {
+              auth.signOut();
+            }}
+          >
+            로그아웃
+          </button>
+        </div>
+      </HeaderWrap>
+    </>
   );
 };
 
