@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
 import deviceCheck from "../../utils/deviceCheck";
-
 import useStore from "../../store";
 
 const Main = () => {
@@ -25,6 +23,13 @@ const Main = () => {
 
   return (
     <MainWrap isMonitoring={isMonitoring}>
+      {deviceCheck() === "desktop" && (
+        <span className="qr-code-wrap">
+          <span className="qr-text">QR</span>
+          <img src="/images/qr_code.png" alt="qr_code" />
+        </span>
+      )}
+
       {isMonitoring ? <img src="/images/monitoring_logo.png" alt="감시중일때의 로고" /> : <img src="/images/not_monitoring_logo.png" alt="감시중이지 않을때의 로고" />}
       <div>
         <Link to="/photo">
@@ -57,6 +62,39 @@ const MainWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .qr-code-wrap {
+    position: absolute;
+    top: -20px;
+    right: 0;
+
+    .qr-text {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border-radius: 50%;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 2px solid #000;
+      background-color: #fff;
+    }
+
+    img {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 100%;
+      border: 1px solid #000;
+    }
+
+    :hover {
+      img {
+        display: block;
+      }
+    }
+  }
 
   img {
     @media screen and (max-width: 1200px) {

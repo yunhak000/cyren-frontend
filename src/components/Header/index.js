@@ -1,15 +1,11 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import styled from "styled-components";
 import io from "socket.io-client";
-
 import { auth } from "../../firebase";
 import useStore from "../../store";
-
 import deviceCheck from "../../utils/deviceCheck";
 import handleNetworkChange from "../../utils/handleNetworkChange";
-
 import Video from "../Video";
 import MobileAlert from "../Modal/MobileAlert";
 
@@ -37,6 +33,15 @@ const Header = () => {
         setUserEmail(user.email);
       }
     });
+
+    return () => {
+      if (socket) {
+        socket.off("request-monitoring-state");
+        socket.off("setting-monitoring");
+        socket.off("response-alert-sounding");
+        socket.off("response-alert-off");
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -89,7 +94,7 @@ const Header = () => {
         <div className="container">
           <h1>
             <Link to="/">
-              <img src="/images/logo.png" alt="" />
+              <img src="/images/logo.png" alt="로고" />
             </Link>
           </h1>
           {deviceCheck() === "desktop" && isMonitoring && <Video />}

@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-
 import useStore from "../../store";
-
 import { deleteFile } from "../../utils/s3Controller";
 
 const PhotoList = () => {
@@ -68,6 +66,10 @@ const PhotoList = () => {
       socket.on("call-photo-list", (date) => {
         callPhotoList(date);
       });
+
+    return () => {
+      socket && socket.off("call-photo-list");
+    };
   }, [date, userEmail]);
 
   return (
