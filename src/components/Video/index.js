@@ -4,7 +4,6 @@ import * as posenet from "@tensorflow-models/posenet";
 import * as tf from "@tensorflow/tfjs";
 import Webcam from "react-webcam";
 import { motionDetector } from "../../utils/motionDetector";
-
 import useStore from "../../store";
 
 const Video = () => {

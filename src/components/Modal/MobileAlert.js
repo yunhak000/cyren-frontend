@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import useStore from "../../store";
 
 const MobileAlert = () => {
@@ -32,6 +31,7 @@ const MobileAlertWrap = styled.div`
   box-sizing: border-box;
   padding: 15px 10px;
   border-radius: 10px 10px 0 0;
+  z-index: 2;
   font-weight: bold;
   background-color: #df2828;
   color: #fff;

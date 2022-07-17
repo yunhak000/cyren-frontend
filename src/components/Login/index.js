@@ -1,11 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
 import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import handleNetworkChange from "../../utils/handleNetworkChange";
-
 import useStore from "../../store";
 
 const Login = () => {
