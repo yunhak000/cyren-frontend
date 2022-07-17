@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import Date from "./Date";
 import PhotoList from "./PhotoList";
 

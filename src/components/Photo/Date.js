@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import dayjs from "dayjs";
-
 import useStore from "../../store";
 
 const Date = () => {

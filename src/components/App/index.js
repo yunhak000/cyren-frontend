@@ -1,12 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
 import GlobalStyles from "./GlobalStyles";
 import { Reset } from "styled-reset";
-
 import useStore from "../../store";
-
 import deviceCheck from "../../utils/deviceCheck";
-
 import Login from "../Login";
 import Header from "../Header";
 import Main from "../Main";
