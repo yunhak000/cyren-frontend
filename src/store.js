@@ -19,8 +19,6 @@ const useStore = create((set) => ({
   setPhotoUrl: (photoUrl) => set(() => ({ photoUrl })),
   isShowPhotoDetail: false,
   setIsShowPhotoDetail: (isShowPhotoDetail) => set(() => ({ isShowPhotoDetail })),
-  token: null,
-  setToken: (token) => set(() => ({ token })),
 }));
 
 export default useStore;

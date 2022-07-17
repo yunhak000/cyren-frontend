@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import io from "socket.io-client";
 
-import { auth, getTokenValue } from "../../firebase";
+import { auth } from "../../firebase";
 import useStore from "../../store";
 
 import deviceCheck from "../../utils/deviceCheck";
@@ -15,15 +15,13 @@ import MobileAlert from "../Modal/MobileAlert";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { setToggleAlert, isAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail, setToken } = useStore();
+  const { setToggleAlert, isAlert, setSocket, socket, setMonitoring, isMonitoring, userEmail, setUserEmail } = useStore();
 
   const handleChange = () => {
     handleNetworkChange(navigator.onLine, userEmail, socket);
   };
 
   useEffect(() => {
-    getTokenValue(setToken);
-
     auth.onAuthStateChanged((user) => {
       if (!user) {
         socket && socket.disconnect();
