@@ -19,6 +19,8 @@ const useStore = create((set) => ({
   setPhotoUrl: (photoUrl) => set(() => ({ photoUrl })),
   isShowPhotoDetail: false,
   setIsShowPhotoDetail: (isShowPhotoDetail) => set(() => ({ isShowPhotoDetail })),
+  isShowGuideModal: true,
+  setIsShowGuideModal: (isShowGuideModal) => set(() => ({ isShowGuideModal })),
 }));
 
 export default useStore;

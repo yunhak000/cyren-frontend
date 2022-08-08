@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import deviceCheck from "../../utils/deviceCheck";
 import useStore from "../../store";
+import Guide from "../Modal/Guide";
 
 const Main = () => {
-  const { socket, toggleMonitoring, isMonitoring, userEmail } = useStore();
+  const { socket, toggleMonitoring, isMonitoring, userEmail, isShowGuideModal } = useStore();
 
   const startMonitoring = () => {
     toggleMonitoring();
@@ -22,35 +23,38 @@ const Main = () => {
   }, [isMonitoring]);
 
   return (
-    <MainWrap isMonitoring={isMonitoring}>
-      {deviceCheck() === "desktop" && (
-        <span className="qr-code-wrap">
-          <span className="qr-text">QR</span>
-          <img src="/images/qr_code.png" alt="qr_code" />
-        </span>
-      )}
+    <>
+      {isShowGuideModal && deviceCheck() === "desktop" && <Guide />}
+      <MainWrap isMonitoring={isMonitoring}>
+        {deviceCheck() === "desktop" && (
+          <span className="qr-code-wrap">
+            <span className="qr-text">QR</span>
+            <img src="/images/qr_code.png" alt="qr_code" />
+          </span>
+        )}
 
-      {isMonitoring ? <img src="/images/monitoring_logo.png" alt="감시중일때의 로고" /> : <img src="/images/not_monitoring_logo.png" alt="감시중이지 않을때의 로고" />}
-      <div>
-        <Link to="/photo">
-          <img src="/images/photo.png" alt="사진첩 아이콘" />
-          <span>photo</span>
-        </Link>
-        <Link to="/map">
-          <img src="/images/map.png" alt="내기기위치 아이콘" />
-          <span>map</span>
-        </Link>
-      </div>
-      {deviceCheck() === "desktop" ? (
-        isMonitoring ? (
-          <button className="stop-monitoring" onClick={stopMonitoring}>
-            감시 종료
-          </button>
-        ) : (
-          <button onClick={startMonitoring}>감시 시작</button>
-        )
-      ) : null}
-    </MainWrap>
+        {isMonitoring ? <img src="/images/monitoring_logo.png" alt="감시중일때의 로고" /> : <img src="/images/not_monitoring_logo.png" alt="감시중이지 않을때의 로고" />}
+        <div>
+          <Link to="/photo">
+            <img src="/images/photo.png" alt="사진첩 아이콘" />
+            <span>photo</span>
+          </Link>
+          <Link to="/map">
+            <img src="/images/map.png" alt="내기기위치 아이콘" />
+            <span>map</span>
+          </Link>
+        </div>
+        {deviceCheck() === "desktop" ? (
+          isMonitoring ? (
+            <button className="stop-monitoring" onClick={stopMonitoring}>
+              감시 종료
+            </button>
+          ) : (
+            <button onClick={startMonitoring}>감시 시작</button>
+          )
+        ) : null}
+      </MainWrap>
+    </>
   );
 };
 
