@@ -6,7 +6,6 @@
 해당 프로젝트는 'Chrome'에 최적화 되어있습니다.
 ```
 
-[Siren 바로가기](https://stirring-crepe-b73769.netlify.app)
 
 <br>
 
